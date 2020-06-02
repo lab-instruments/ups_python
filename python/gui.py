@@ -58,9 +58,36 @@ class UpsGui(QtWidgets.QMainWindow):
         self.modeSel.currentIndexChanged.connect(self.mode_set)
         self.pinchValve.stateChanged.connect(self.pv_set)
 
+        # Setup Run Buttons and Boxes
+        self.runStart.clicked.connect(self.start_run)
+        self.runStop.clicked.connect(self.stop_run)
+
         # Set Tabs Enable
         self.tabs.setTabEnabled(0, False)
         self.tabs.setTabEnabled(1, False)
+
+    def stop_run(self):
+        # Issue Command
+        self.api.set_stop()
+
+        # Enable/Disable Buttons
+        self.runStart.setEnabled(True)
+        self.runStop.setEnabled(False)
+
+    def start_run(self):
+
+        # Get Values from GUI
+        run_pre_time = int(self.runPreTrigTimerValue.text())
+        run_post_time = int(self.runLoopTimerValue.text())
+        run_time = int(self.runTimerValue.text())
+        num_loops = int(self.runNumLoopsValue.text())
+
+        # Issue Command
+        self.api.set_run(num_loops, run_pre_time, run_post_time, run_time)
+
+        # Enable/Disable Buttons
+        self.runStart.setEnabled(False)
+        self.runStop.setEnabled(True)
 
     def pv_set(self):
         if self.pinchValve.isChecked():
@@ -158,6 +185,12 @@ class UpsGui(QtWidgets.QMainWindow):
         self.dac1DebugValue.setText('0')
         self.ledDebugValue.setText('0')
         self.pinchValve.setCheckState(False)
+
+        # Reset GUI Fields
+        self.runPreTrigTimerValue.setText('20')
+        self.runTimerValue.setText('20')
+        self.runLoopTimerValue.setText('60')
+        self.runNumLoopsValue.setText('1')
 
         # Reset Box
         self.api.set_dac0(0)

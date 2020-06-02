@@ -82,11 +82,125 @@ class UpsApi:
                                                         self.ups_server_port
                                                        )
 
+        # Run Start Route
+        self.routes_run = 'http://{0}:{1}/run'.format(
+                                                      self.ups_server_ip,
+                                                      self.ups_server_port
+                                                     )
+
+        # Run Stop Route
+        self.routes_stop = 'http://{0}:{1}/stop'.format(
+                                                        self.ups_server_ip,
+                                                        self.ups_server_port
+                                                       )
+
         # Pinch Valve Route
         self.routes_valve = 'http://{0}:{1}/valve'.format(
                                                           self.ups_server_ip,
                                                           self.ups_server_port
                                                          )
+
+        # Status Route
+        self.routes_status = 'http://{0}:{1}/status'.format(
+                                                            self.ups_server_ip,
+                                                            self.ups_server_port
+                                                           )
+
+    # --------------------------------------------------------------------------
+    #  Status Method
+    # --------------------------------------------------------------------------
+    # Get Status
+    def get_status(self):
+
+        # Check the Enable Bit
+        if not self.en:
+            raise Exception('Class routes not initialized')
+
+        # Issue Request
+        status_get = requests.get(self.routes_status)
+
+        # Check Response Code
+        if status_get.status_code != 200:
+            exc = 'HTTP request error :: {0}'.format(status_get.status_code)
+            raise Exception(exc)
+
+        return j.loads(status_get.text)
+
+    # --------------------------------------------------------------------------
+    #  Stop Method
+    # --------------------------------------------------------------------------
+    # Set RUN
+    def set_stop(self):
+
+        # Issue Request
+        stop_put = requests.put(self.routes_stop)
+
+        # Check Response Code
+        if stop_put.status_code != 200:
+            exc = 'HTTP request error :: {0}'.format(stop_put.status_code)
+            raise Exception(exc)
+
+    # --------------------------------------------------------------------------
+    #  Run Methods
+    # --------------------------------------------------------------------------
+    # Set RUN
+    def set_run(self, run_loops, run_pre_cnt, run_post_cnt, run_cnt):
+
+        # Setup Run Message
+        msg = {}
+        msg['RUN_LOOPS'] = run_loops
+        msg['RUN_PRE_CNT'] = run_pre_cnt
+        msg['RUN_POST_CNT'] = run_post_cnt
+        msg['RUN_CNT'] = run_cnt
+
+        # Check the Enable Bit
+        if not self.en:
+            raise Exception('Class routes not initialized')
+
+        # Check the Run Loops Range
+        if run_loops < 0 or run_loops > 100:
+            raise Exception('RUN_LOOPS request out of range')
+
+        if run_pre_cnt < 0 or run_pre_cnt > 100:
+            raise Exception('RUN_PRE_CNT request out of range')
+
+        if run_post_cnt < 0 or run_post_cnt > 100:
+            raise Exception('RUN_POST_CNT request out of range')
+
+        if run_cnt < 0 or run_cnt > 100:
+            raise Exception('RUN_CNT request out of range')
+
+        # Issue Request
+        run_put = requests.put(self.routes_run, json=msg)
+
+        # Check Response Code
+        if run_put.status_code != 200:
+            exc = 'HTTP request error :: {0}'.format(run_put.status_code)
+            raise Exception(exc)
+
+    # Get RUN
+    def get_run(self):
+
+        # Setup Run Message
+        msg = {}
+        msg['RUN_LOOPS'] = run_loops
+        msg['RUN_PRE_CNT'] = run_pre_cnt
+        msg['RUN_POST_CNT'] = run_post_cnt
+        msg['RUN_CNT'] = run_cnt
+
+        # Check the Enable Bit
+        if not self.en:
+            raise Exception('Class routes not initialized')
+
+        # Issue Request
+        run_get = requests.get(self.routes_run)
+
+        # Check Response Code
+        if run_get.status_code != 200:
+            exc = 'HTTP request error :: {0}'.format(run_get.status_code)
+            raise Exception(exc)
+
+        return j.loads(run_get.text)
 
     # --------------------------------------------------------------------------
     #  LED Methods
@@ -103,7 +217,7 @@ class UpsApi:
             raise Exception('LED request out of range')
 
         # Issue Request
-        led_put = requests.put(self.routes_led, json={'led_val': led})
+        led_put = requests.put(self.routes_led, json={'LED': led})
 
         # Check Response Code
         if led_put.status_code != 200:
@@ -127,7 +241,7 @@ class UpsApi:
 
         # Parse Return
         ret = j.loads(led_get.text)
-        val = int(ret['VALUE'])
+        val = int(ret['LED'])
 
         # Done ... Return
         return val
@@ -147,7 +261,7 @@ class UpsApi:
             raise Exception('DAC0 request out of range')
 
         # Issue Request
-        dac0_put = requests.put(self.routes_dac0, json={'dac0': dac0})
+        dac0_put = requests.put(self.routes_dac0, json={'DAC0': dac0})
 
         # Check Response Code
         if dac0_put.status_code != 200:
@@ -171,7 +285,7 @@ class UpsApi:
 
         # Parse Return
         ret = j.loads(dac0_get.text)
-        val = int(ret['VALUE'])
+        val = int(ret['DAC0'])
 
         # Done ... Return
         return val
@@ -191,7 +305,7 @@ class UpsApi:
             raise Exception('DAC1 request out of range')
 
         # Issue Request
-        dac1_put = requests.put(self.routes_dac1, json={'dac1': dac1})
+        dac1_put = requests.put(self.routes_dac1, json={'DAC1': dac1})
 
         # Check Response Code
         if dac1_put.status_code != 200:
@@ -215,7 +329,7 @@ class UpsApi:
 
         # Parse Return
         ret = j.loads(dac1_get.text)
-        val = int(ret['VALUE'])
+        val = int(ret['DAC1'])
 
         # Done ... Return
         return val
@@ -235,7 +349,7 @@ class UpsApi:
             raise Exception('MODE request out of range')
 
         # Issue Request
-        mode_put = requests.put(self.routes_mode, json={'mode': mode})
+        mode_put = requests.put(self.routes_mode, json={'MODE': mode})
 
         # Check Response Code
         if mode_put.status_code != 200:
@@ -259,7 +373,7 @@ class UpsApi:
 
         # Parse Return
         ret = j.loads(mode_get.text)
-        val = int(ret['VALUE'])
+        val = int(ret['MODE'])
 
         # Done ... Return
         return val
@@ -279,7 +393,7 @@ class UpsApi:
             raise Exception('VALVE request out of range')
 
         # Issue Request
-        pv_put = requests.put(self.routes_valve, json={'valve_state': pv})
+        pv_put = requests.put(self.routes_valve, json={'VALVE': pv})
 
         # Check Response Code
         if pv_put.status_code != 200:
@@ -303,7 +417,7 @@ class UpsApi:
 
         # Parse Return
         ret = j.loads(pv_get.text)
-        pv = int(ret['VALUE'])
+        pv = int(ret['VALVE'])
 
         # Done ... Return
         return pv
