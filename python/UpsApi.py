@@ -106,6 +106,32 @@ class UpsApi:
                                                             self.ups_server_port
                                                            )
 
+        # Version Route
+        self.routes_ver = 'http://{0}:{1}/ver'.format(
+                                                      self.ups_server_ip,
+                                                      self.ups_server_port
+                                                     )
+
+    # --------------------------------------------------------------------------
+    #  Version Method
+    # --------------------------------------------------------------------------
+    # Get Version
+    def get_version(self):
+
+        # Check the Enable Bit
+        if not self.en:
+            raise Exception('Class routes not initialized')
+
+        # Issue Request
+        ver_get = requests.get(self.routes_ver)
+
+        # Check Response Code
+        if ver_get.status_code != 200:
+            exc = 'HTTP request error :: {0}'.format(ver_get.status_code)
+            raise Exception(exc)
+
+        return j.loads(ver_get.text)
+
     # --------------------------------------------------------------------------
     #  Status Method
     # --------------------------------------------------------------------------
@@ -453,11 +479,12 @@ class UpsApi:
 
 if __name__ == "__main__":
     ups_api = UpsApi()
-    ups_api.connect('10.1.1.151')
+    ups_api.connect('10.1.1.220')
 
     print(ups_api.check())
 
-    ups_api.set_led(0xF)
-    print(ups_api.get_led())
-    ups_api.set_led(0x1)
-    print(ups_api.get_led())
+    # ups_api.set_led(0xF)
+    # print(ups_api.get_led())
+    # ups_api.set_led(0x1)
+    # print(ups_api.get_led())
+    print(ups_api.get_status())

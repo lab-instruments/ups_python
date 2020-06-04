@@ -1,4 +1,4 @@
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, uic, Qt
 from PyQt5.QtCore import QThread, pyqtSignal
 from DiscoveryClient import DiscoveryClient
 import sys
@@ -41,6 +41,10 @@ class UpsGui(QtWidgets.QMainWindow):
 
     def setup_ui(self):
 
+        # Setup Timer
+        self.timer = Qt.QTimer(self)
+        self.timer.timeout.connect(self.ups_check_status)
+
         # Populate Mode List
         self.modeSel.addItem('Idle')
         self.modeSel.addItem('Loopback')
@@ -66,6 +70,35 @@ class UpsGui(QtWidgets.QMainWindow):
         self.tabs.setTabEnabled(0, False)
         self.tabs.setTabEnabled(1, False)
 
+    def ups_check_status(self):
+        status = self.api.get_status()
+        self.logBox.appendPlainText('HIT')
+        status = status['RUN_STATUS']
+
+        if status == 1:
+            # Enable/Disable Buttons
+            self.runStart.setEnabled(True)
+            self.runStop.setEnabled(False)
+
+            # Set Status Box
+            self.statusBox.setText('IDLE')
+
+            # Disable Timer
+            self.timer.stop()
+
+        elif status == 2:
+            # Set Status Box
+            self.statusBox.setText('PRE PULSE')
+
+        elif status == 3:
+            # Set Status Box
+            self.statusBox.setText('PULSE')
+
+        elif status == 4:
+            # Set Status Box
+            self.statusBox.setText('POST PULSE')
+
+
     def stop_run(self):
         # Issue Command
         self.api.set_stop()
@@ -88,6 +121,9 @@ class UpsGui(QtWidgets.QMainWindow):
         # Enable/Disable Buttons
         self.runStart.setEnabled(False)
         self.runStop.setEnabled(True)
+
+        # Start Timer Thread
+        self.timer.start(500)
 
     def pv_set(self):
         if self.pinchValve.isChecked():
@@ -199,6 +235,9 @@ class UpsGui(QtWidgets.QMainWindow):
         self.api.set_valve(0)
         self.api.set_mode(3)
 
+        # Set Status Box
+        self.statusBox.setText('IDLE')
+
     def debug_led_set(self):
         self.api.set_led(int(self.ledDebugValue.text()))
 
@@ -221,6 +260,10 @@ class UpsGui(QtWidgets.QMainWindow):
 
             # Disable Connect Button
             self.upsConnect.setEnabled(False)
+
+            ver = self.api.get_version()
+            self.gitVer.setText(ver['GIT_VER'])
+            self.gitStatus.setText(ver['GIT_STAT'])
 
             # Enable Debug Tab and Model Select Box
             self.modeGroupBox.setEnabled(True)
