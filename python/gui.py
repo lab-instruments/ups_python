@@ -3,7 +3,16 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from DiscoveryClient import DiscoveryClient
 import sys
 from UpsApi import UpsApi
+import logging
 
+
+# Setup Log Handler
+log = logging.getLogger(__name__)
+# Setup Logging
+logging.basicConfig(
+                    format='%(module)s.%(funcName)s: %(message)s',
+                    level=logging.DEBUG
+                   )
 
 class DiscoThread(QThread):
 
@@ -22,6 +31,8 @@ class DiscoThread(QThread):
 
 class UpsGui(QtWidgets.QMainWindow):
     def __init__(self):
+
+        log.info('Start GUI')
 
         # Load GUI
         super(UpsGui, self).__init__()

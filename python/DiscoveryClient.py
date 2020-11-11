@@ -31,11 +31,18 @@ class DiscoveryClient:
         #    Get list of interfaces, filter out lo and get the broadcast and
         #    local address.
         # ----------------------------------------------------------------------
+        self.bcast_addr = []
+        self.ip_addr = []
         for iface in n.interfaces():
+
             if iface != 'lo':
                 # Parse Broadcast and Local Address
-                self.bcast_addr = n.ifaddresses(iface)[2][0]['broadcast']
-                self.ip_addr = n.ifaddresses(iface)[2][0]['addr']
+                try:
+                    self.bcast_addr.append(n.ifaddresses(iface)[2][0]['broadcast'])
+                    self.ip_addr.append(n.ifaddresses(iface)[2][0]['addr'])
+
+                except:
+                    log.info('Interface {0} does not have IP/BCAST address')
 
         # Report Address
         log.info('Register broadcast address :  {0}'.format(self.bcast_addr))
@@ -76,7 +83,11 @@ class DiscoveryClient:
 
             # Send Data
             log.info('Send to discovery packet to {0}:{1}'.format(self.bcast_addr, self.port))
-            self.sock.sendto(req_p, (self.bcast_addr, self.port))
+
+            # Send to All Addresses
+            for addr in self.bcast_addr:
+                self.sock.sendto(req_p, (addr, self.port))
+            # self.sock.sendto(req_p, (self.bcast_addr[1], self.port))
 
             # Receive Data
             while True:
@@ -90,6 +101,7 @@ class DiscoveryClient:
                 ret.append(a[0])
 
         except Exception as e:
+            log.info(e)
             pass
 
         # Done .. Return
