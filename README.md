@@ -17,6 +17,7 @@ Python source for host based GUI
       * source ./setup_venv.sh
     * Windows
       * setup_venv.cmd
+
    If netifaces fails to build during install, the Visual Studio build tools might need to be installed.
     * Download and run -- https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools&rel=16
     * Click the box that says Visual Studio build tools and install 
