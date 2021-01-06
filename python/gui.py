@@ -36,7 +36,7 @@ class UpsGui(QtWidgets.QMainWindow):
 
         # Load GUI
         super(UpsGui, self).__init__()
-        uic.loadUi('/local/git/ups_python/python/gui.ui', self)
+        uic.loadUi('gui.ui', self)
         self.show()
 
         # Setup UpsApi

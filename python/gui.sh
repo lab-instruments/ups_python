@@ -5,4 +5,3 @@ source ./venv/bin/activate
 
 # Start GUI
 python gui.py
-
