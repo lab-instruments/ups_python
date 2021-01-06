@@ -9,7 +9,19 @@ Python source for host based GUI
 
 ### INSTALL
 1. Pull down the code from Github
-    * git clone https://github.com/mdelong20/firewall_cntrl.git
-2. Navigate to the Python directory and setup the Python virtual environment using the provided script.
-    * source ./setup_venv.sh
-3. To launch the GUI, run python gui.py (or possibly python3 gui.py).
+    * git clone https://github.com/lab-instruments/ups_python.git
+2. Navigate to the Python directory
+    * cd ups_python
+3. Setup the Python virtual environment using the provided script
+    * Linux/Mac
+      * source ./setup_venv.sh
+    * Windows
+      * setup_venv.cmd
+3. To launch the GUI
+    * Windows (pick one)
+      * From the command prompt (cmd.exe), activate the virtual environment and run 'python gui.py'
+      * Run gui.cmd from the command prompt (cmd.exe)
+      * Setup a shortcut to gui.cmd and put on desktop
+    * Linux/Mac (pick one)
+      * From the command prompt (bash), activate the virtual environment and run 'python gui.py'
+      * Run gui.sh from the command prompt (bash)
