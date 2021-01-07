@@ -4,18 +4,20 @@ Python source for host based GUI
 ## HOW TO INSTALL
 
 ### PRE REQS
-* Have Python installed
-* Have git installed
+* Have Python installed (google "Python" and download/install for your operating system)
+* Have git installed (google "Git" and download/install for your operating system)
+* Create an account on Github.com
 
 ### INSTALL
-1. Pull down the code from Github
+1. Open Git. Pull down the code from Github by typing the following
     * git clone https://github.com/lab-instruments/ups_python.git
-2. Navigate to the Python directory
+    you may be asked to signin to GitHub.com at this point. 
+2. Navigate to the Python directory (search for "ups_python" in search bar or finder for folder)
     * cd ups_python
-3. Setup the Python virtual environment using the provided script
+3. Open the "Python" folder. Setup the Python virtual environment using the provided script
     * Linux/Mac
       * source ./setup_venv.sh
-    * Windows
+    * Windows (double click on file in Python folder; command window will run; it takes a minute so be patient)p
       * setup_venv.cmd
 
    If netifaces fails to build during install, the Visual Studio build tools might need to be installed.
