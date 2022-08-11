@@ -11,4 +11,3 @@ pip install -r requirements.txt
 
 # Exit Python VENV
 deactivate
-
