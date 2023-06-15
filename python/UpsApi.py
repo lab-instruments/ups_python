@@ -112,6 +112,12 @@ class UpsApi:
                                                       self.ups_server_port
                                                      )
 
+        # Reset Route
+        self.routes_reset = 'http://{0}:{1}/reset'.format(
+                                                          self.ups_server_ip,
+                                                          self.ups_server_port
+                                                         )
+
     # --------------------------------------------------------------------------
     #  Version Method
     # --------------------------------------------------------------------------
@@ -164,6 +170,20 @@ class UpsApi:
         # Check Response Code
         if stop_put.status_code != 200:
             exc = 'HTTP request error :: {0}'.format(stop_put.status_code)
+            raise Exception(exc)
+
+    # --------------------------------------------------------------------------
+    #  Reset Method
+    # --------------------------------------------------------------------------
+    # Set Reset
+    def set_reset(self):
+
+        # Issue Request
+        reset_put = requests.put(self.routes_reset)
+
+        # Check Response Code
+        if reset_put.status_code != 200:
+            exc = 'HTTP request error :: {0}'.format(reset_put.status_code)
             raise Exception(exc)
 
     # --------------------------------------------------------------------------

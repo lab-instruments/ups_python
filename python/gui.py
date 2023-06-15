@@ -287,6 +287,9 @@ class UpsGui(QtWidgets.QMainWindow):
             self.api.set_led(0)
             self.api.set_valve(0)
 
+            # Issue Interface Reset
+            self.api.set_reset()
+
     def update_ups_list(self, ipList):
 
         # ----------------------------------------------------------------------
